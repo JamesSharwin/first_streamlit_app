@@ -25,14 +25,16 @@ streamlit.dataframe(fruits_to_show)
 
 streamlit.header("Fruityvice Fruit Advice")
 
+def get_fruityvice_date(fruit):
+  fruityvice_response = requests.get("https://fruityvice.com/api/fruit/" + fruit_choice)
+  return pd.json_normalize(fruityvice_response.json())  
+
 try:
   fruit_choice = streamlit.text_input("What kind of fruit would you like advice on?:")
   if not fruit_choice:
     streamlit.error("Please select a fruit to get information")
   else:
-    fruityvice_response = requests.get("https://fruityvice.com/api/fruit/" + fruit_choice)
-    fruityvice_nomalised = pd.json_normalize(fruityvice_response.json())
-    streamlit.dataframe(fruityvice_nomalised)
+    streamlit.dataframe(get_fruityvice_date(fruit_choice))
 
 except URLError:
   streamlit.error()
